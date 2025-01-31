@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Science Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('background.jpg') no-repeat center center/cover;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+  
+        }
+        .quiz-container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            margin: auto;
+        }
+
+#rules-container {
+    width: 50%;
+    margin: 20px auto;
+    padding: 15px;
+    border: 1px solid #ff9800;
+    border-radius: 5px;
+    background: #fff3e0;
+    font-size: 16px;
+}
+#rules-container h3 {
+    color: #ff5722;
+}
+
+#rules-container ul {
+    list-style: none;
+    padding: 0;
+}
+
+#rules-container li {
+    padding: 5px;
+    border-bottom: 1px dashed #ff9800;
+}
+
+
+        .question {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .options {
+            margin-bottom: 20px;
+        }
+        .options label {
+            display: block;
+            padding: 8px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            margin: 5px 0;
+            cursor: pointer;
+        }
+        .options input[type="radio"] {
+            margin-right: 10px;
+        }
+        .btn {
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none; 
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-cancel {
+            background-color: #f44336;
+        }
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <h2>Science Quiz</h2>
+        <div id="quiz"></div>
+        <button id="startBtn" class="btn">क्विज शुरू करें</button>
+        <button id="nextBtn" class="btn" style="display: none;">अगला प्रश्न</button>
+        <button id="submitBtn" class="btn" disabled>उत्तर सबमिट करें</button>
+        <button id="cancelBtn" class="btn btn-cancel" disabled>क्विज रद्द करें</button>
+        <div id="result" class="result"></div>
+   </div>
+   
+<div id="rules-container">
+    <h3>Quiz Rules:</h3>
+    <ul>
+        <li>हर प्रश्न के लिए 4 विकल्प दिए जाएंगे।</li>
+        <li>सही उत्तर चुनने के लिए एक विकल्प पर क्लिक करें ।</li>
+        <li>हर सही उत्तर के लिए 2 अंक मिलेगा।</li>
+        <li>गलत उत्तर पर 1अंक काट दिया जाएगा।</li>
+        <li>एक बार उत्तर देने के बाद वापस नहीं बदला जा सकता।</li>
+    </ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+        const questions = [
+    
+
+
+
+  {
+    question: "हमारी त्वचा का रंग निर्धारित करने वाला वर्णक कौन सा है?",
+    options: ["हीमोग्लोबिन", "कैरोटीन", "मेलानिन", "कोलेजन"],
+    correctAnswer: 2,
+  },
+  {
+    question: "मस्तिष्क का सबसे बड़ा भाग कौन सा है?",
+    options: ["सेरिबैलम", "मेडुला", "सेरिब्रल हेमिस्फियर", "हाइपोथैलेमस"],
+    correctAnswer: 2,
+  },
+  {
+    question: "शरीर में कौन सा अंग पित्त रस का निर्माण करता है?",
+    options: ["अग्न्याशय", "गुर्दा", "यकृत", "आमाशय"],
+    correctAnswer: 2,
+  },
+  {
+    question: "निम्नलिखित में से कौन सा रक्त समूह सार्वभौमिक दाता कहलाता है?",
+    options: ["A", "B", "O", "AB"],
+    correctAnswer: 2,
+  },
+  {
+    question: "निम्नलिखित में से कौन-सा अंग शरीर में जल संतुलन बनाए रखता है?",
+    options: ["यकृत", "गुर्दा", "हृदय", "अग्न्याशय"],
+    correctAnswer: 1,
+  },
+  {
+    question: "कौन सा हार्मोन महिला में द्वितीयक यौन लक्षणों के लिए जिम्मेदार होता है?",
+    options: ["टेस्टोस्टेरोन", "प्रोजेस्टेरोन", "एस्ट्रोजन", "ग्लूकागन"],
+    correctAnswer: 2,
+  },
+  {
+    question: "रक्त का थक्का जमाने में कौन सा तत्व सहायक होता है?",
+    options: ["सोडियम", "कैल्शियम", "आयरन", "पोटैशियम"],
+    correctAnswer: 1,
+  },
+  {
+    question: "निम्नलिखित में से कौन-सा जठर रस में पाया जाने वाला एंजाइम है?",
+    options: ["एमाइलेज", "ट्रिप्सिन", "पेप्सिन", "लिपेज"],
+    correctAnswer: 2,
+  },
+  {
+    question: "मानव शरीर की सबसे छोटी हड्डी कौन सी होती है?",
+    options: ["फीमर", "स्टेपीज़", "रेडियस", "ह्यूमरस"],
+    correctAnswer: 1,
+  },
+  {
+    question: "निम्नलिखित में से कौन-सा जीन संबंधी रोग है?",
+    options: ["मलेरिया", "थैलेसीमिया", "डेंगू", "स्कर्वी"],
+    correctAnswer: 1,
+  },
+  {
+    question: "निम्नलिखित में से कौन-सा विटामिन सूर्य के प्रकाश से प्राप्त होता है?",
+    options: ["विटामिन A", "विटामिन B", "विटामिन C", "विटामिन D"],
+    correctAnswer: 3,
+  },
+  {
+    question: "निम्नलिखित में से कौन सा तत्व थायरॉइड हार्मोन के निर्माण में सहायक होता है?",
+    options: ["आयरन", "आयोडीन", "कैल्शियम", "पोटैशियम"],
+    correctAnswer: 1,
+  },
+  {
+    question: "सांस लेने की क्रिया को कौन नियंत्रित करता है?",
+    options: ["मेडुला", "सेरिबैलम", "थैलेमस", "हाइपोथैलेमस"],
+    correctAnswer: 0,
+  },
+  {
+    question: "रक्त में लाल रंग किस तत्व की उपस्थिति के कारण होता है?",
+    options: ["कैल्शियम", "पोटैशियम", "हीमोग्लोबिन", "कोलेजन"],
+    correctAnswer: 2,
+  },
+  {
+    question: "निम्नलिखित में से कौन-सी ग्रंथि शरीर की 'मास्टर ग्रंथि' कहलाती है?",
+    options: ["थायरॉइड", "अधिवृक्क", "अग्न्याशय", "पिट्यूटरी"],
+    correctAnswer: 3,
+  },
+  {
+    question: "कौन सा पदार्थ हड्डियों को लचीला बनाता है?",
+    options: ["कैल्शियम", "कोलेजन", "फॉस्फोरस", "मैग्नीशियम"],
+    correctAnswer: 1,
+  },
+  {
+    question: "स्नायु तंत्र की मूलभूत इकाई क्या होती है?",
+    options: ["न्यूरॉन", "टिशू", "सिनेप्स", "ग्लांड"],
+    correctAnswer: 0,
+  },
+  {
+    question: "हृदय में कुल कितने कक्ष होते हैं?",
+    options: ["2", "4", "6", "3"],
+    correctAnswer: 1,
+  },
+  {
+    question: "रक्त में ग्लूकोज की मात्रा को कौन नियंत्रित करता है?",
+    options: ["एड्रिनैलिन", "ग्लूकागन", "इंसुलिन", "थायरॉक्सिन"],
+    correctAnswer: 2,
+},
+  {
+    question: "निम्नलिखित में से कौन-सा जीव अपने शरीर का तापमान वातावरण के अनुसार नियंत्रित नहीं कर सकता?",
+    options: ["कुत्ता", "बिल्ली", "मेंढक", "मनुष्य"],
+    correctAnswer: 2,
+  },
+  {
+    question: "कौन सा पोषक तत्व शरीर में ऊर्जा प्रदान करता है?",
+    options: ["प्रोटीन", "वसा", "खनिज", "विटामिन"],
+    correctAnswer: 1,
+  },
+  {
+    question: "कौन-सा ऊतक जल का परिवहन करता है?",
+    options: ["फ्लोएम", "जाइलम", "मेसोफिल", "कॉलेंकाइमा"],
+    correctAnswer: 1,
+  },
+  {
+    question: "निम्नलिखित में से कौन-सा जीव पुनर्जनन द्वारा प्रजनन करता है?",
+    options: ["हाइड्रा", "प्लानैरिया", "अमीबा", "यीस्ट"],
+    correctAnswer: 1,
+  },
+  {
+    question: "मानव शरीर में रक्त का pH कितना होता है?",
+    options: ["7.4", "5.6", "8.2", "6.5"],
+    correctAnswer: 0,
+  },
+  {
+    question: "कौन सा हार्मोन 'फाइट या फ्लाइट' प्रतिक्रिया के लिए जिम्मेदार होता है?",
+    options: ["इंसुलिन", "एड्रिनैलिन", "ग्लूकागन", "थायरॉक्सिन"],
+    correctAnswer: 1,
+  },
+  {
+    question: "पत्तियों में हरे रंग के लिए कौन सा वर्णक जिम्मेदार होता है?",
+    options: ["एंथोसाइनिन", "क्लोरोफिल", "कैरेटिनॉइड", "जैंथोफिल"],
+    correctAnswer: 1,
+  },
+  {
+    question: "निम्नलिखित में से कौन-सा अंग रक्त को शुद्ध करता है?",
+    options: ["हृदय", "यकृत", "वृक्क", "फेफड़े"],
+    correctAnswer: 2,
+  },
+  {
+    question: "कौन-सा हार्मोन रक्त शर्करा के स्तर को बढ़ाता है?",
+    options: ["इंसुलिन", "ग्लूकागन", "थायरॉक्सिन", "एस्ट्रोजन"],
+    correctAnswer: 1,
+  },
+  {
+    question: "पाचन तंत्र में कौन सा एंजाइम स्टार्च को ग्लूकोज में तोड़ता है?",
+    options: ["एमाइलेज", "ट्रिप्सिन", "पेप्सिन", "लिपेज"],
+    correctAnswer: 0,
+  },
+  {
+    question: "निम्नलिखित में से कौन-सा हार्मोन गर्भावस्था को बनाए रखने में मदद करता है?",
+    options: ["इंसुलिन", "प्रोजेस्टेरोन", "एड्रिनैलिन", "ग्लूकागन"],
+    correctAnswer: 1,
+  },
+  {
+    question: "हड्डियों और दांतों को मजबूत बनाने के लिए कौन सा खनिज आवश्यक है?",
+    options: ["आयरन", "सोडियम", "कैल्शियम", "जिंक"],
+    correctAnswer: 2,
+  },
+  {
+    question: "मलेरिया किसके द्वारा फैलता है?",
+    options: ["वायरस", "बैक्टीरिया", "मच्छर", "फंगस"],
+    correctAnswer: 2,
+  },
+  {
+    question: "मनुष्यों में सबसे बड़ी ग्रंथि कौन सी है?",
+    options: ["अग्न्याशय", "यकृत", "अधिवृक्क", "थायरॉइड"],
+    correctAnswer: 1,
+  },
+  {
+    question: "निम्नलिखित में से कौन सा अंग इंसुलिन का उत्पादन करता है?",
+    options: ["यकृत", "अग्न्याशय", "गुर्दे", "हृदय"],
+    correctAnswer: 1,
+  },
+  {
+    question: "निम्नलिखित में से कौन-सी गैस प्रकाश संश्लेषण में उपयोग की जाती है?",
+    options: ["ऑक्सीजन", "नाइट्रोजन", "कार्बन डाइऑक्साइड", "हाइड्रोजन"],
+    correctAnswer: 2,
+  },
+  {
+    question: "मानव शरीर में कितनी हड्डियाँ होती हैं?",
+    options: ["306", "206", "106", "406"],
+    correctAnswer: 1,
+  },
+  {
+    question: "कौन-सा खनिज हीमोग्लोबिन के निर्माण में सहायक होता है?",
+    options: ["कैल्शियम", "आयरन", "सोडियम", "मैग्नीशियम"],
+    correctAnswer: 1,
+  },
+  {
+    question: "मनुष्य में हृदय की धड़कन को नियंत्रित करने वाला भाग कौन सा है?",
+    options: ["मस्तिष्क", "मेरुदंड", "पेसमेकर", "यकृत"],
+    correctAnswer: 2,
+  },
+  {
+    question: "कौन सा विटामिन नाइट ब्लाइंडनेस से बचाव करता है?",
+    options: ["विटामिन C", "विटामिन A", "विटामिन D", "विटामिन K"],
+    correctAnswer: 1,
+  },
+  {
+    question: "दुग्ध उत्पादों में सबसे अधिक कौन सा पोषक तत्व पाया जाता है?",
+    options: ["प्रोटीन", "विटामिन D", "कैल्शियम", "आयरन"],
+    correctAnswer: 2,
+  },
+  {
+    question: "शरीर में पानी की मात्रा को नियंत्रित करने वाला हार्मोन कौन सा है?",
+    options: ["थायरॉक्सिन", "एड्रिनैलिन", "वसोप्रेसिन", "ग्लूकागन"],
+    correctAnswer: 2,
+  },
+  {
+    question: "गर्भावस्था की पुष्टि के लिए कौन सा हार्मोन मापा जाता है?",
+    options: ["एचसीजी", "प्रोजेस्टेरोन", "एस्ट्रोजन", "थायरॉक्सिन"],
+    correctAnswer: 0,
+  },
+  {
+    question: "कौन-सा तत्त्व हड्डियों और दांतों में मौजूद होता है?",
+    options: ["सोडियम", "पोटैशियम", "कैल्शियम", "मैग्नीशियम"],
+    correctAnswer: 2,
+  },
+  {
+    question: "कौन-सा हार्मोन बच्चों में वृद्धि को नियंत्रित करता है?",
+    options: ["ग्रोथ हार्मोन", "इंसुलिन", "थायरॉक्सिन", "प्रोलैक्टिन"],
+    correctAnswer: 0,
+  },
+  {
+    question: "कौन-सा ऊतक शरीर में संदेशों के संचार के लिए जिम्मेदार होता है?",
+    options: ["मांसपेशी ऊतक", "संयोजी ऊतक", "तंत्रिका ऊतक", "एपिथीलियल ऊतक"],
+    correctAnswer: 2,
+  },
+  {
+    question: "कौन सा विटामिन स्कर्वी रोग को रोकता है?",
+    options: ["विटामिन A", "विटामिन B", "विटामिन C", "विटामिन D"],
+    correctAnswer: 2,
+  },
+  {
+    question: "किस दर्पण की फोकस दूरी ऋणात्मक होती है?",
+    options: ["समतल दर्पण", "अवतल दर्पण", "उत्तल दर्पण", "इनमें से कोई नहीं"],
+    correctAnswer: 1,
+  },
+  {
+    question: "दर्पण की फोकस दूरी (f) और वक्रता त्रिज्या (R) में क्या संबंध है?",
+    options: ["f = R", "f = R/2", "f = 2R", "f = 3/2R"],
+    correctAnswer: 1,
+  },
+  {
+    question: "सामान्य दृष्टि के लिए स्पष्ट दृष्टि की न्यूनतम दूरी है?",
+    options: ["25 मीटर", "25 सेन्टी मीटर", "25 मिली मीटर", "इनमें से कोई नहीं"],
+    correctAnswer: 1,
+  },
+  {
+    question: "श्वेत प्रकाश का कौन सा रंग किसी प्रिज्म से गुजरने के पश्चात सबसे कम झुकता है?",
+    options: ["बैगनी", "नीला", "लाल", "पीला"],
+    correctAnswer: 2,
+  },
+  {
+    question: "मानव आँख की रेटिना द्वारा बनाई गई छवि होती है?",
+    options: ["आभासी और सीधा", "वास्तविक और उल्टा", "आभासी और उल्टा", "वास्तविक और सीधा"],
+    correctAnswer: 1,
+  },
+  {
+    question: "आकाश का रंग नीला प्रतीत होता है?",
+    options: ["प्रकाश के परावर्तन के कारण", "प्रकाश के प्रकीर्णन के कारण", "प्रकाश के अपवर्तन के कारण", "इनमें से कोई नहीं"],
+    correctAnswer: 1,
+  },
+  {
+    question: "किस दर्पण से वस्तु का प्रतिबिम्ब बड़ा बनता है?",
+    options: ["समतल दर्पण", "अवतल दर्पण", "उत्तल दर्पण", "इनमें से कोई नहीं"],
+    correctAnswer: 1,
+  },
+  {
+    question: "निम्नलिखित में कौन सा लेंस निकट-दृष्टि दोष को ठीक करने के लिए उपयोग किया जाता है?",
+    options: ["उत्तल लेंस", "सम्मोत्तल लेंस", "अवतल लेंस", "इनमें से कोई नहीं"],
+    correctAnswer: 2,
+  },
+  {
+    question: "निम्नांकित में से कौन उपकरण विधुत धारा की उपस्थिति दर्शाता है?",
+    options: ["गैल्वेनोमीटर", "मोटर", "जेनरेटर", "वोल्टमीटर"],
+    correctAnswer: 0,
+  },
+  {
+    question: "दायें हाथ के अंगूठे के नियम को किसने प्रतिपादित किया था?",
+    options: ["ऑटड", "फ्लेमिंग", "आइंस्टीन", "मैक्सवेल"],
+    correctAnswer: 3,
+  },
+  {
+    question: "विभवान्तर का S.I. मात्रक होता है?",
+    options: ["वोल्ट", "ओम", "एम्पीयर", "कूलम्ब"],
+    correctAnswer: 0,
+  },
+  {
+    question: "निम्नलिखित में किस संयोजन द्वारा प्रतिरोध का मान बढ़ता है?",
+    options: ["श्रेणी क्रम", "समानान्तर क्रम", "श्रेणी एवं समानान्तर दोनों", "इनमें से कोई नहीं"],
+    correctAnswer: 0,
+  },
+  {
+    question: "चुम्बकीय बल रेखा की प्रकृति होती है?",
+    options: ["काल्पनिक", "वास्तविक", "वास्तविक एवं काल्पनिक दोनों", "इनमें से कोई नहीं"],
+    correctAnswer: 0,
+  },
+  {
+    question: "1 किलोवाट-घंटा किसके बराबर होता है?",
+    options: ["0.36×10¹⁰ जूल", "1.6×10⁻¹⁹ जूल", "3.6×10⁶ जूल", "इनमें से कोई नहीं"],
+    correctAnswer: 2,
+  },
+  {
+    question: "नवीकरणीय ऊर्जा का स्रोत क्या है?",
+    options: ["नाभिकीय ऊर्जा", "सौर ऊर्जा", "कोयले से प्राप्त ऊर्जा", "प्राकृतिक गैस से प्राप्त ऊर्जा"],
+    correctAnswer: 1,
+  },
+  {
+    question: "कौन सा लेंस अपसारी लेंस भी कहा जाता है?",
+    options: ["अवतल लेंस", "उत्तल लेंस", "अवतल एवं उत्तल लेंस दोनों", "इनमें से कोई नहीं"],
+    correctAnswer: 0,
+  },
+  {
+    question: "प्रकाश का प्राथमिक वर्ण कौन है?",
+    options: ["लाल", "नीला", "हरा", "उपरोक्त सभी"],
+    correctAnswer: 3,
+  },
+  {
+    question: "निम्नलिखित में से कौन नेत्र का रंगीन भाग होता है?",
+    options: ["कॉर्निया", "पुपील", "रेटिना", "आईरिस"],
+    correctAnswer: 3,
+  },
+  {
+    question: "1 HP बराबर है?",
+    options: ["746 वाट", "760 वाट", "780 वाट", "550 वाट"],
+    correctAnswer: 0,
+  },
+  {
+    question: "विशालक शीशा (मैग्नीफाइंग ग्लास) होता है?",
+    options: ["अवतल लेंस", "उत्तल लेंस", "अवतल दर्पण", "उत्तल दर्पण"],
+    correctAnswer: 1,
+  }
+
+
+
+
+
+
+        ];
+
+        let currentQuestionIndex = 0;
+        let answers = [];
+        let quizStarted = false;
+
+        function displayQuestion(index) {
+            const questionData = questions[index];
+            const questionHtml = `
+                <div class="question">${index + 1}. ${questionData.question}</div>
+                <div class="options">
+                    ${questionData.options.map((option, i) => 
+                        `<label><input type="radio" name="question${index}" value="${i}"> ${option}</label>`).join('')}
+                </div>
+            `;
+            return questionHtml;
+        }
+
+        function startQuiz() {
+            quizStarted = true;
+            currentQuestionIndex = 0;
+            answers = [];
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('cancelBtn').disabled = false;
+            document.getElementById('submitBtn').disabled = false;
+            document.getElementById('nextBtn').style.display = 'inline-block';
+            document.getElementById('quiz').innerHTML = displayQuestion(currentQuestionIndex);
+        }
+
+        function nextQuestion() {
+            const selectedOption = document.querySelector(`input[name="question${currentQuestionIndex}"]:checked`);
+            if (selectedOption) {
+                answers[currentQuestionIndex] = parseInt(selectedOption.value);
+            }
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < questions.length) {
+                document.getElementById('quiz').innerHTML = displayQuestion(currentQuestionIndex);
+            } else {
+                document.getElementById('nextBtn').style.display = 'none';
+                document.getElementById('submitBtn').disabled = false;
+            }
+        }
+
+        function cancelQuiz() {
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('cancelBtn').disabled = true;
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('quiz').innerHTML = '';
+            document.getElementById('result').innerHTML = 'क्विज रद्द किया गया।';
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            answers.forEach((answer, index) => {
+                if (answer === questions[index].correctAnswer) {
+                    score+=2;
+                }else{score-=1}
+            });
+            document.getElementById('result').innerHTML = `क्विज पूरा हो गया। आपने ${questions.length*2} में से ${score} MARKS प्राप्त किया।`;
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('cancelBtn').disabled = true;
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('nextBtn').style.display = 'none';
+        }
+
+        document.getElementById('startBtn').addEventListener('click', startQuiz);
+        document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+        document.getElementById('submitBtn').addEventListener('click', submitQuiz);
+        document.getElementById('cancelBtn').addEventListener('click', cancelQuiz);
+    </script>
+</body>
+</html>
