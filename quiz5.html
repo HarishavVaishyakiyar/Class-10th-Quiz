@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Structure Of Atom Quiz</title>
+    <style>
+        /* Responsive Background */
+        body {
+            font-family: Arial, sans-serif;
+            background: url('background.jpg') no-repeat center center;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+                    overflow-y: auto; /* पूरे पेज को स्क्रॉल करने की अनुमति */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        /* Quiz Container Centered */
+        .quiz-container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+            max-height: 80vh; /* कंटेनर की अधिकतम ऊँचाई */
+            overflow-y: auto; /* स्क्रॉलिंग की अनुमति */
+        }
+
+        /* Result Section */
+        #result-container {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        /* Question & Options */
+        .question {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .options label {
+            display: block;
+            padding: 8px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            margin: 5px 0;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .options input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none; 
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-cancel {
+            background-color: #f44336;
+        }
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        /* Correct & Incorrect Answers */
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+        .incorrect {
+            color: red;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <div id="result-container"></div>  <!-- रिजल्ट ऊपर दिखाने के लिए -->
+        <h2>Structure Of Atom Quiz</h2>
+        <div id="quiz"></div>
+        <button id="startBtn" class="btn">क्विज शुरू करें</button>
+        <button id="prevBtn" class="btn" style="display: none;">पिछला प्रश्न</button>
+        <button id="nextBtn" class="btn" style="display: none;">अगला प्रश्न</button>
+        <button id="submitBtn" class="btn" style="display: none;">उत्तर सबमिट करें</button>
+        <button id="cancelBtn" class="btn btn-cancel" disabled>क्विज रद्द करें</button>
+    </div>
+
+    <script>
+        const questions = [
+ 
+
+{
+    question: "यदि 2 + x = 16 तो x का मान क्या होगा?",
+    options: ["4", "2", "1", "14"],
+    correctAnswer: 3,
+  },
+
+  {
+    question: "यदि sin x + sin² x = 1, तो cos² x + cos⁴ x का मान क्या होगा?",
+    options: ["1/4", "1/2", "1", "3/4"],
+    correctAnswer: 3,
+  },
+  {
+    question: "एक न्यायसंगत पासा फेंका गया तो 2 का गुणज आने की प्रायिकता क्या होगी?",
+    options: ["1/2", "1/3", "2/3", "1/6"],
+    correctAnswer: 1,
+  },
+  {
+    question: "अच्छी प्रकार से फेंटी गई एक ताश की गड्डी में से एक पत्ता निकाला जाता है, तो इसके लाल रंग का पत्ता होने की प्रायिकता क्या होगी?",
+    options: ["2", "2/13", "3/13", "इनमें से कोई नहीं"],
+    correctAnswer: 1,
+  },
+  {
+    question: "π क्या है?",
+    options: ["एक अपरिमेय संख्या", "एक परिमेय संख्या", "एक पूर्णांक संख्या", "इनमें से कोई नहीं"],
+    correctAnswer: 0,
+  },
+  {
+    question: "sec² 60° – tan² 60° + 1 का मान क्या होगा?",
+    options: ["1", "2", "-2", "0"],
+    correctAnswer: 1,
+  },
+  {
+    question: "cot(90° - A) का मान क्या होगा?",
+    options: ["cot A", "sec A", "cosec A", "tan A"],
+    correctAnswer: 3,
+  },
+  {
+    question: "2tan30°/(1+ tan²30°) का मान क्या होगा?",
+    options: ["sin 30°", "cos 60°", "tan 60°", "sin 60°"],
+    correctAnswer: 3,
+  },
+  {
+    question: "किसी मीनार की ऊँचाई 15 मीटर है। जब सूर्य का उन्नयन कोण 60° हो, तो मीनार की छाया की लंबाई कितनी होगी?",
+    options: ["15 मीटर", "15√3 मीटर", "5/√3 मीटर", "45/√3 मीटर"],
+    correctAnswer: 1,
+  },
+  {
+    question: "√125 का परिमेयीकरण गुणक क्या होगा?",
+    options: ["√2", "√3", "√5", "5√5"],
+    correctAnswer: 2,
+  },
+  {
+    question: "यदि एक वृत्त के दो व्यास परस्पर लंबवत् हैं, तो कितने समान भाग बनते हैं?",
+    options: ["2", "3", "4", "6"],
+    correctAnswer: 2,
+  },
+  {
+    question: "रेखीय बहुपद में शून्यकों की संख्या कितनी होती है?",
+    options: ["3", "2", "1", "0"],
+    correctAnswer: 2,
+  },
+  {
+    question: "एक वृत्त की त्रिज्या 14 सेमी है, तो इसका क्षेत्रफल क्या होगा?",
+    options: ["308 सेमी²", "616 सेमी²", "154 सेमी²", "704 सेमी²"],
+    correctAnswer: 1,
+  },
+  {
+    question: "यदि किसी वृत्त का क्षेत्रफल 154 cm² है, तो उसकी त्रिज्या कितनी होगी?",
+    options: ["5 सेमी", "6 सेमी", "7 सेमी", "8 सेमी"],
+    correctAnswer: 2,
+  },
+  {
+    question: "एक बेलन की ऊँचाई 14 सेमी है और बेलन के वक्र सतह का क्षेत्रफल 264 सेमी² है, तो इसका आयतन क्या होगा?",
+    options: ["369 सेमी³", "503 सेमी³", "296 सेमी³", "396 सेमी³"],
+    correctAnswer: 3,
+  },
+  {
+    question: "sin30° का मान क्या होगा?",
+    options: ["1", "1/2", "√3/2", "1/√2"],
+    correctAnswer: 1,
+  },
+  {
+    question: "cos²θ - 1 का मान क्या होगा?",
+    options: ["-sin²θ", "sin²θ", "0", "cot²θ"],
+    correctAnswer: 0,
+  },
+  {
+    question: "(1 - sec²θ) × cot²θ का मान क्या होगा?",
+    options: ["0", "1", "-1", "2"],
+    correctAnswer: 0,
+  },
+  {
+    question: "sinα × cotα का मान क्या होगा?",
+    options: ["1", "cosα", "cos²α", "sin²α"],
+    correctAnswer: 1,
+  },
+  {
+    question: "अगर cosecθ - cotθ = x, तो cosecθ का मान क्या होगा?",
+    options: ["(x²-1)/2x", "(x²-1)/2", "(x²+1)/2x", "(x²+1)/2"],
+    correctAnswer: 2,
+  },
+  {
+    question: "यदि एक वृत्त की परिधि 2πr है, तो उसका व्यास कितना होगा?",
+    options: ["r", "2r", "πr", "r²"],
+    correctAnswer: 1,
+  },
+
+  {
+    question: "27, 35, 13 और 56 में से कौन सी संख्या अभाज्य संख्या है?",
+    options: ["27", "35", "13", "56"],
+    correctAnswer: 2,
+  },
+  {
+    question: "6x² – 7x – 3 के शून्यक होंगे:",
+    options: ["3/2 , -1/3", "-3/2 , 1/3", "3/2 , 1/3", "-3/2 , -1/3"],
+    correctAnswer: 1,
+  },
+  {
+    question: "144 के अभाज्य गुणनखंड में 2 का घातांक क्या है?",
+    options: ["6", "4", "8", "5"],
+    correctAnswer: 1,
+  },
+  {
+    question: "त्रिघात बहुपद का सबसे व्यापक रूप क्या है?",
+    options: [
+      "ax² + bx +c",
+      "2ax⁴ + bx³ +c",
+      "ax³ + bx² + cx + d",
+      "ax² + bx² + c",
+    ],
+    correctAnswer: 2,
+  },
+  {
+    question: "बहुपद x² – 3 के शून्यक होंगे:",
+    options: ["(3 , 3)", "(-√3 , +√3)", "-√3 , -√3", "(-3, -3)"],
+    correctAnswer: 1,
+  },
+  {
+    question: "द्विघात बहुपद x²-5x + 6 के शून्यक हैं:",
+    options: ["1 , -1", "2 , 1", "2 , 3", "-2 , -3"],
+    correctAnswer: 2,
+  },
+  {
+    question: "बिंदु (2√3, -√2) किस पाद में स्थित है?",
+    options: ["प्रथम पाद", "द्वितीय पाद", "तृतीय पाद", "चतुर्थ पाद"],
+    correctAnswer: 0,
+  },
+  {
+    question: "विन्दुओं R(1, 1) और S(1, 5) के बीच की दूरी है",
+    options: ["475 इकाई", "375 इकाई", "215 इकाई", "5 इकाई"],
+    correctAnswer: 3,
+  },
+  {
+    question: "रेखा y = 8 का आलेख किस बिंदु से होकर नहीं गुजरेगा?",
+    options: ["(1, 8)", "(4, 8)", "(0, 8)", "(8, 1)"],
+    correctAnswer: 3,
+  },
+  {
+    question: "निम्नलिखित में से कौन-सा बिंदु प्रथम चतुर्थांश में है?",
+    options: ["(10, 4)", "(-4, 3)", "(-4, -3)", "(4, -3)"],
+    correctAnswer: 0,
+  },
+  {
+    question: "विंदु A (5, 6) की y-अक्ष से लंबवत् दूरी कितनी है?",
+    options: ["4 इकाई", "6 इकाई", "11 इकाई", "√61 इकाई"],
+    correctAnswer: 1,
+  },
+  {
+    question: "यदि किसी वृत्त के व्यास के छोरों के निर्देशांक (6, 8) और (-6, 8) हैं, तो वृत्त के केंद्र के निर्देशांक क्या होंगे?",
+    options: ["(6, -6)", "(-8, 8)", "(0, 0)", "(12, 16)"],
+    correctAnswer: 2,
+  },
+  {
+    question: "tan(90° – A) का मान क्या होगा?",
+    options: ["tan A", "cot A", "-cot A", "-tan A"],
+    correctAnswer: 1,
+  },
+  {
+    question: "यदि किसी वृत्त की त्रिज्या K गुनी कर दी जाए, तो पुराने और नए वृत्तों के क्षेत्रफलों का अनुपात क्या होगा?",
+    options: ["1 : K", "1 : K³", "1 : K²", "K² : 1"],
+    correctAnswer: 2,
+  },
+  {
+    question: "यदि एक वृत्त की परिधि 2π से बढ़ाकर 4π कर दी जाए, तो उसका क्षेत्रफल होगा:",
+    options: ["आधा", "दुगुना", "तीन गुना", "चार गुना"],
+    correctAnswer: 3,
+  },
+  {
+    question: "यदि वृत्ताकार क्षेत्र की परिधि 4π मीटर है, तो उसकी त्रिज्या कितनी होगी?",
+    options: ["1 मीटर", "2 मीटर", "π मीटर", "इनमें से कोई नहीं"],
+    correctAnswer: 1,
+  },
+  {
+    question: "44 मी परिधि वाले वृत्त की त्रिज्या कितनी होगी?",
+    options: ["14 मी", "7 मी", "5 मी", "44 मी"],
+    correctAnswer: 1,
+  },
+  {
+    question: "1 - sin² 60° = ?",
+    options: ["1", "1/2", "1/4", "0"],
+    correctAnswer: 1,
+  },
+  {
+    question: "1/sec Φ का मान क्या होगा?",
+    options: ["tan Φ", "cos Φ", "sec Φ", "cosec Φ"],
+    correctAnswer: 1,
+  },
+  {
+    question: "cot x * tan x का मान क्या होगा?",
+    options: ["1", "-1", "0", "2"],
+    correctAnswer: 0,
+  },
+  {
+    question: "यदि cos Φ = 1/2 हो तो cosec Φ का मान क्या होगा?",
+    options: ["2", "2/√3", "√3/2", "1/√3"],
+    correctAnswer: 1,
+  },
+  {
+    question: "यदि Φ = 45° हो तो sec Φ + cosec Φ का मान क्या होगा?",
+    options: ["1", "√2", "2", "2√2"],
+    correctAnswer: 3,
+  },
+  {
+    question: "यदि √3 tan A – 3 = 0, तो A का मान क्या होगा?",
+    options: ["90°", "60°", "45°", "30°"],
+    correctAnswer: 1,
+  },
+  {
+    question: "दो न्यायसंगत सिक्के उछाले जाते हैं, तो कम-से-कम एक शीर्ष आने की प्रायिकता क्या होगी?",
+    options: ["1/2", "2/3", "3/4", "2/13"],
+    correctAnswer: 2,
+  },
+  {
+    question: "8 सेमी त्रिज्या वाले वृत्त के अंतःवर्ग का क्षेत्रफल कितना होगा?",
+    options: ["64 सेमी²", "84 सेमी²", "100 सेमी²", "128 सेमी²"],
+    correctAnswer: 0,
+  },
+  {
+    question: "यदि शंकु की ऊँचाई और त्रिज्या तीन गुनी हो जाती है, तो शंकु का आयतन कितना हो जाएगा?",
+    options: ["8 गुना", "16 गुना", "6 गुना", "27 गुना"],
+    correctAnswer: 3,
+  },
+  {
+    question: "समांतर श्रेढी 17, 34, 51,... का कौन-सा पद 170 है?",
+    options: ["9 वाँ", "10 वाँ", "11 वाँ", "12 वाँ"],
+    correctAnswer: 2,
+  },
+  {
+    question: "यदि 173x + 197y = 149 और 197x + 173y = 221 तो (x, y) का मान क्या होगा?",
+    options: ["(3, -2)", "(2, 1)", "(1, -2)", "(2, -1)"],
+    correctAnswer: 1,
+  },
+  {
+    question: "sec² 60° – tan² 60° + 1 का मान क्या होगा?",
+    options: ["1", "2", "-2", "0"],
+    correctAnswer: 1,
+}
+
+
+
+
+
+        ];
+
+        let currentQuestionIndex = 0;
+        let answers = [];
+        let quizStarted = false;
+
+        function displayQuestion(index) {
+            const questionData = questions[index];
+            document.getElementById('quiz').innerHTML = `
+                <div class="question">${index + 1}. ${questionData.question}</div>
+                <div class="options">
+                    ${questionData.options.map((option, i) => 
+                        `<label><input type="radio" name="question${index}" value="${i}" ${answers[index] === i ? "checked" : ""}> ${option}</label>`
+                    ).join('')}
+                </div>
+            `;
+            
+            // स्क्रॉल सबसे ऊपर ले जाने के लिए
+            document.querySelector(".quiz-container").scrollTop = 0;
+        }
+
+        function startQuiz() {
+            quizStarted = true;
+            currentQuestionIndex = 0;
+            answers = [];
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('cancelBtn').disabled = false;
+            displayQuestion(currentQuestionIndex);
+            document.getElementById('nextBtn').style.display = 'inline-block';
+            document.getElementById('prevBtn').style.display = 'inline-block';
+        }
+
+        function nextQuestion() {
+            const selectedOption = document.querySelector(`input[name="question${currentQuestionIndex}"]:checked`);
+            if (selectedOption) {
+                answers[currentQuestionIndex] = parseInt(selectedOption.value);
+            }
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                displayQuestion(currentQuestionIndex);
+                document.getElementById('submitBtn').style.display = 'none';
+            } else {
+                document.getElementById('nextBtn').style.display = 'none';
+                document.getElementById('submitBtn').style.display = 'inline-block';
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion(currentQuestionIndex);
+                document.getElementById('submitBtn').style.display = 'none';
+                document.getElementById('nextBtn').style.display = 'inline-block';
+            }
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            let attemptedQuestions = answers.length;
+            let resultHTML = "<h3>📊 **आपके उत्तर:**</h3>";
+
+            answers.forEach((answer, index) => {
+                const correctIndex = questions[index].correctAnswer;
+                const isCorrect = answer === correctIndex;
+
+                if (isCorrect) {
+                    score += 4;
+                } else {
+                    score -= 1;
+                }
+
+                // सही और गलत उत्तर दिखाना
+                resultHTML += `
+                    <div class="${isCorrect ? 'correct' : 'incorrect'}">
+                        ${index + 1}. ${questions[index].question} <br>
+                        ✅ सही उत्तर: ${questions[index].options[correctIndex]} ${isCorrect ? "✔️" : ""}
+                        ${!isCorrect ? `<br> ❌ आपका उत्तर: ${questions[index].options[answer] || "कोई उत्तर नहीं"} ` : ""}
+                        <hr>
+                    </div>
+                `;
+            });
+
+            score = Math.max(0, score); // स्कोर को 0 से नीचे नहीं जाने देंगे
+
+            document.getElementById('result-container').innerHTML = `🎯 **आपने ${attemptedQuestions * 4} में से ${score} अंक प्राप्त किए**`;
+            document.getElementById('quiz').innerHTML = resultHTML;
+
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('cancelBtn').disabled = true;
+            document.getElementById('submitBtn').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('prevBtn').style.display = 'none';
+        }
+
+        document.getElementById('startBtn').addEventListener('click', startQuiz);
+        document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+        document.getElementById('prevBtn').addEventListener('click', prevQuestion);
+        document.getElementById('submitBtn').addEventListener('click', submitQuiz);
+        document.getElementById('cancelBtn').addEventListener('click', submitQuiz);
+    </script>
+</body>
+</html>
